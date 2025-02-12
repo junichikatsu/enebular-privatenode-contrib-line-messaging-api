@@ -1,0 +1,69 @@
+<script type="text/html" data-template-name="webhook-verification">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> 名前</label>
+    <input type="text" id="node-input-name" placeholder="名前">
+  </div>
+  <div class="form-row">
+    <label for="node-input-config"><i class="fa fa-user"></i> 接続設定</label>
+    <input type="text" id="node-input-config">
+  </div>
+</script>
+
+<script type="text/javascript">
+(() => {
+  RED.nodes.registerType('webhook-verification', {
+    category: 'LINE Messaging API',
+    color: "#06C755",
+    defaults: {
+      config: { type: 'config', required: true },
+      name: { value: '' }
+    },
+    inputs: 1,
+    outputs: 2,
+    icon: 'arrow-in.png',
+    paletteLabel: 'Webhook検証',
+    label: function () {
+      return this.name || 'Webhook検証'
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : ''
+    }
+  })
+})()
+</script>
+
+<script type="text/html" data-help-name="webhook-verification">
+  <p>LINEのwebhookを受けた際に署名を検証します</p>
+  
+  <h3>入力</h3>
+    <dl class="message-properties">
+        <dt>req
+            <span class="property-type">object</span>
+        </dt>
+        <dd> LINE公式アカウントのwebhookで受け取ったhttpリクエスト</dd>
+        <dd> headersを参照します</dd>
+    </dl>
+  
+  <h3>出力1</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd> 検証に成功した際のメッセージが出力されます</dd>
+    </dl>
+    <dl class="message-properties">
+        <dt>line
+            <span class="property-type">object</span>
+        </dt>
+        <dd> LINE公式アカウントのwebhookで受け取ったメッセージイベントの内容</dd>
+    </dl>
+    <h3>出力2</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd> 検証に失敗した際のメッセージが出力されます</dd>
+    </dl>  
+  <h3>詳細</h3>
+      <p><a href="https://developers.line.biz/ja/reference/messaging-api/#message-objects" target="_blank" rel="noopener noreferrer">署名を検証する</a>の内容に従った検証を行います。検証に失敗した場合は、出力１、検証に失敗した場合やLINEのWebhook以外のアクセスの場合は、出力２に出力されます</p>
+  </script>

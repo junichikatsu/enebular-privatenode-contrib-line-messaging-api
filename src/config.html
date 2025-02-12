@@ -1,0 +1,148 @@
+<script type="text/html" data-template-name="config">
+  <div id="node-config-line-config">
+    <div class="form-row">
+      <label for="node-config-input-name">
+          <i class="fa fa-tag fa-fw"></i> 設定名
+      </label>
+      <input type="text" id="node-config-input-name" placeholder="設定名">
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-channelSecret"><i class="fa fa-lock"></i>チャネルシークレット</label>
+      <input type="password" id="node-config-input-channelSecret">
+      <input type="hidden" id="node-config-input-channelSecretType">
+      <input type="hidden" id="node-config-input-channelSecretConstValue">
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-channelAccessToken"><i class="fa fa-lock"></i>チャネルアクセストークン</label>
+      <input type="password" id="node-config-input-channelAccessToken">
+      <input type="hidden" id="node-config-input-channelAccessTokenType">
+      <input type="hidden" id="node-config-input-channelAccessTokenConstValue">
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+(() => {
+    RED.nodes.registerType('config', {
+      category: 'config',
+      color: '#06C755',
+      defaults: {
+          name: { value: "LINE messaging API設定" }
+      },
+      credentials: {
+        channelSecret: { type: 'password', required: true },
+        channelAccessToken: { type: 'password', required: true }
+      },
+      label: function() {
+        return this.name
+      },
+    oneditprepare: function() {
+      createInOutConfigParamSetting(
+        {
+          name: 'channelSecret',
+          types: ['msg', 'env', 'str'],
+          defaultType: 'str'
+        },
+        this
+      )
+      createInOutConfigParamSetting(
+        {
+          name: 'channelAccessToken',
+          types: ['msg', 'env', 'str'],
+          defaultType: 'str'
+        },
+        this
+      )
+
+      setInputTypeSetting("#node-config-input-channelSecret")
+      setInputTypeSetting("#node-config-input-channelAccessToken")
+    },
+    oneditsave: function () {
+      saveInOutConfigParamSetting(
+        {
+          name: 'channelSecret'
+        },
+        this
+      )
+      saveInOutConfigParamSetting(
+        {
+          name: 'channelAccessToken'
+        },
+        this
+      )
+    }
+    });
+    
+
+  const setInputTypeSetting = (inputSelector) => {
+    $(inputSelector).on('change', (event, type, value) => {
+      const input = $(inputSelector)
+        .next('div')
+        .find('.red-ui-typedInput-input-wrap')
+        .find('input')
+      if (type == "str") {
+        input.attr('type', 'password')
+      } else if (type == "num") {
+        input.attr('type', 'number')
+      } else {
+        input.attr('type', 'text')
+      }
+    })
+  }
+
+  const createInOutConfigParamSetting = (params, _this) => {
+    const { name, types, defaultType } = params
+    const credentialStrValue = _this.credentials[name]
+
+    if (!_this[name+"Type"]) {
+      _this[name+"Type"] = defaultType
+    }
+    if(_this[name+"Type"] == 'str') {
+      $(`#node-config-input-${name}ConstValue`).val("")
+    } else {
+      if(_this[name+"ConstValue"] == "") {
+        $(`#node-config-input-${name}ConstValue`).val(_this.credentials[name])
+      } else {
+          _this.credentials[name] = _this[name+"ConstValue"]
+        $(`#node-config-input-${name}`).val(_this.credentials[name])
+      }
+    }
+    $(`#node-config-input-${name}Type`).val(_this[name+"Type"])
+    $(`#node-config-input-${name}`).typedInput({
+      default: defaultType,
+      typeField: $(`#node-config-input-${name}Type`),
+      types: types
+    })
+    $(`#node-config-input-${name}`).typedInput('type', _this[name+"Type"])
+  }
+  
+  const saveInOutConfigParamSetting = (params, _this) => {
+    const { name } = params
+    if($(`#node-config-input-${name}Type`).val() != 'str') {
+        _this[`${name}ConstValue`] = $(`#node-config-input-${name}`).val()
+        $(`#node-config-input-${name}ConstValue`).val(_this[`${name}ConstValue`])
+    } else {
+        $(`#node-config-input-${name}ConstValue`).val("")
+        _this[`${name}ConstValue`] = ''
+    }
+  }
+})()
+</script>
+
+<script type="text/html" data-help-name="config">
+  <p>LINE messaging APIの認証情報</p>
+  
+  <h3>プロパティ</h3>
+      <dl class="message-properties">
+          <dt>チャネルシークレット
+              <span class="property-type">string</span>
+          </dt>
+          <dd> LINE messaging APIのChannel secretの値を入力します</dd>
+      </dl>
+      <dl class="message-properties">
+          <dt>チャネルアクセストークン
+              <span class="property-type">string</span>
+          </dt>
+          <dd> LINE messaging APIのチャネルアクセストークンの値を入力します</dd>
+      </dl>
+</script>

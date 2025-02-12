@@ -1,0 +1,81 @@
+<script type="text/html" data-template-name="push">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> 名前</label>
+    <input type="text" id="node-input-name" placeholder="名前">
+  </div>
+  <div class="form-row">
+    <label for="node-input-config"><i class="fa fa-user"></i> 接続設定</label>
+    <input type="text" id="node-input-config">
+  </div>
+  <div class="form-row">
+    <label for="node-input-targetId"><i class="icon-tag"></i> To</label>
+    <input type="password" id="node-input-targetId" placeholder="プッシュ先のユーザーIDもしくはグループID">
+  </div>
+  <div class="form-row">
+    <label for="node-input-message"><i class="icon-tag"></i> メッセージ</label>
+    <input type="text" id="node-input-message" placeholder="入力がある場合は優先されます">
+  </div>
+</script>
+
+<script>
+  RED.nodes.registerType('push',{
+      category: 'LINE Messaging API',
+      color: '#06C755',
+      defaults: {
+        config: { type: 'config', required: true },
+        name: { value: '' },
+        message: { value: '' },
+      },
+      credentials: {
+          targetId:{type:"password"},
+      },
+      inputs:1,
+      outputs:1,
+      paletteLabel: 'プッシュ',
+      icon: "comment.png",
+      align: "left",
+      label: function() {
+          return this.name||"プッシュ";
+      }
+  });
+</script>
+
+<script type="text/html" data-help-name="push">
+  <p>LINEにプッシュメッセージを送ります</p>
+  <p>※プランに応じて利用回数のあるメッセージです</p>
+  
+  <h3>入力</h3>
+      <dl class="message-properties">
+          <dt>payload
+              <span class="property-type">string | object</span>
+          </dt>
+          <dd> 送るメッセージの内容です。プロパティのメッセージに入力がある場合は、プロパティの方を優先します</dd>
+      </dl>
+      <dl class="message-properties">
+          <dt>targetId
+              <span class="property-type">string</span>
+          </dt>
+          <dd> 送信先のIDです。プロパティのToが入力されていてもこちらを優先します</dd>
+      </dl>
+  
+   <h3>出力</h3>
+       <ol class="node-ports">
+           <li>成功時の出力
+               <dl class="message-properties">
+                   <dt>payload <span class="property-type">object</span></dt>
+                   <dd> プッシュメッセージAPIの結果が出力されます</dd>
+                   <dd> 内容については、<a href="https://developers.line.biz/ja/reference/messaging-api/#send-push-message-response" target="_blank" rel="noopener noreferrer">プッシュメッセージのレスポンス</a>を参照ください</dd>
+               </dl>
+           </li>
+           <li>異常時の出力
+               <dl class="message-properties">
+                   <dt>payload <span class="property-type">string</span></dt>
+                   <dd> エラー内容が出力されます</dd>
+               </dl>
+           </li>
+       </ol>
+  
+  <h3>詳細</h3>
+      <p>入力としてのpayloadに文字列が入力されている場合は、その文字列を送ります。</p>
+      <p>また、入力がオブジェクトの場合は、そのオブジェクトの内容を送ります。オブジェクトの形式は、<a href="https://developers.line.biz/ja/reference/messaging-api/#message-objects" target="_blank" rel="noopener noreferrer">メッセージオブジェクト</a>を参照ください</p>
+  </script>
