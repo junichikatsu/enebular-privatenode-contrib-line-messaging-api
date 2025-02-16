@@ -1,8 +1,23 @@
 import { NodeDef } from '@node-red/registry'
+import * as registry from '@node-red/registry'
 
 export interface Credentials {
   channelSecret: string
   channelAccessToken: string
+}
+
+export interface ConfigNodeProperty extends registry.Node {
+  channelSecret: string
+  channelSecretType: string
+  channelSecretConstValue: string
+  channelAccessToken: string
+  channelAccessTokenType: string
+  channelAccessTokenConstValue: string
+  name: string
+  credentials: {
+    channelSecret: string
+    channelAccessToken: string
+  }
 }
 
 export interface ConfigNodeDef extends NodeDef {

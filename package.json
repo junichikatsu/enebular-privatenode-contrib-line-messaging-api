@@ -1,6 +1,6 @@
 {
   "name": "enebular-privatenode-contrib-line-messaging-api",
-  "version": "0.0.5",
+  "version": "0.1.2",
   "scripts": {
     "build": "npm-run-all remove-dist copy:src2dist remove-tgz && tsc && npm pack",
     "copy:src2dist": "node -e \"require('fs-extra').copySync('./src', './dist')\"",
@@ -9,8 +9,7 @@
   },
   "description": "LINE messaging API node for enebular",
   "dependencies": {
-    "@line/bot-sdk": "^9.5.3",
-    "crypto": "^1.0.1"
+    "@line/bot-sdk": "^9.5.3"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.7",

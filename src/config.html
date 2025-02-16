@@ -27,7 +27,11 @@
       category: 'config',
       color: '#06C755',
       defaults: {
-          name: { value: "LINE messaging API設定" }
+          name: { value: "LINE messaging API設定" },
+          channelSecretType: { value: "str" },
+          channelSecretConstValue: { value: "" },
+          channelAccessTokenType: { value: "str" },
+          channelAccessTokenConstValue: { value: "" },
       },
       credentials: {
         channelSecret: { type: 'password', required: true },
